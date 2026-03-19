@@ -1,0 +1,12 @@
+# Build artifacts
+build/
+dist/
+*.spec
+__pycache__/
+*.pyc
+
+# Config (contains user credentials)
+homebox_export_config.json
+
+# Generated PDFs
+*.pdf
