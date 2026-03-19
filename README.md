@@ -46,7 +46,7 @@ Download the latest `HomeboxExport.exe` from the [Releases](https://github.com/J
 5. Select items and click **Export Selected to PDF**, or export everything with **Export All to PDF**
 6. Choose where to save and you're done
 
-Your connection settings (URL, username, display name) are saved to `homebox_export_config.json` next to the .exe for convenience. **Passwords are never saved.**
+Your connection settings are saved to `homebox_export_config.json` in the same folder as the .exe. **This file is plain text JSON** and contains your Homebox URL, username, and display name. **Passwords are never saved** — you will be prompted each time you launch the app. If you share or move the .exe, be aware this config file may travel with it.
 
 ## Building from Source
 
