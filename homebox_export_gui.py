@@ -33,6 +33,9 @@ GRAY_50    = (249, 250, 251)
 WHITE      = (255, 255, 255)
 BLUE_600   = (37, 99, 235)
 
+# GUI Font
+FONT_FAMILY = "Segoe UI"
+
 def _get_config_path() -> Path:
     """Config lives next to the .exe (or .py script) so it's portable."""
     if getattr(sys, "frozen", False):
@@ -479,7 +482,7 @@ class InventoryReport(FPDF):
                     img_data = client.get_attachment(item["id"], rcpt["id"])
                     if self.get_y() + 50 > self.h - 25:
                         self.add_page()
-                    rw, rh = self._embed_image(img_data, 20, self.get_y(), self._pw, 90)
+                    _, rh = self._embed_image(img_data, 20, self.get_y(), self._pw, 90)
                     if rh > 0:
                         self.set_y(self.get_y() + rh + 2)
                         self.set_font("Helvetica", "I", 7)
@@ -565,11 +568,11 @@ class HomeboxExportApp(tk.Tk):
             style.theme_use("clam")
 
         # Custom styles
-        style.configure("Navy.TButton", font=("Segoe UI", 9, "bold"))
-        style.configure("Header.TLabel", font=("Segoe UI", 10, "bold"))
-        style.configure("Status.TLabel", font=("Segoe UI", 9))
-        style.configure("Treeview", font=("Segoe UI", 9), rowheight=24)
-        style.configure("Treeview.Heading", font=("Segoe UI", 9, "bold"))
+        style.configure("Navy.TButton", font=(FONT_FAMILY, 9, "bold"))
+        style.configure("Header.TLabel", font=(FONT_FAMILY, 10, "bold"))
+        style.configure("Status.TLabel", font=(FONT_FAMILY, 9))
+        style.configure("Treeview", font=(FONT_FAMILY, 9), rowheight=24)
+        style.configure("Treeview.Heading", font=(FONT_FAMILY, 9, "bold"))
 
         self._build_ui()
         self._load_config()
@@ -631,7 +634,7 @@ class HomeboxExportApp(tk.Tk):
         self.asset_entry.bind("<Return>", lambda e: self._find_by_ids())
         ttk.Button(s_row2, text="Find", command=self._find_by_ids).pack(side="left", padx=2)
         ttk.Label(s_row2, text="(comma-separated, e.g. 000-001-234, 000-002-100)",
-                  foreground="gray", font=("Segoe UI", 8)).pack(side="left", padx=8)
+                  foreground="gray", font=(FONT_FAMILY, 8)).pack(side="left", padx=8)
 
         # ── Items treeview ──
         tree_frame = ttk.Frame(main)

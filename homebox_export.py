@@ -47,7 +47,8 @@ BLUE_600   = (37, 99, 235)
 GREEN_700  = (21, 128, 61)
 RED_600    = (220, 38, 38)
 
-CONFIG_PATH = Path.home() / ".homebox_export.json"
+_CONFIG_FILENAME = ".homebox_export.json"
+CONFIG_PATH = (Path.home() / _CONFIG_FILENAME).resolve()
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -579,7 +580,7 @@ class InventoryReport(FPDF):
                     img_data = client.get_attachment(item["id"], att_id)
                     if self.get_y() + 50 > self.h - 25:
                         self.add_page()
-                    rw, rh = self._embed_image(
+                    _, rh = self._embed_image(
                         img_data, 20, self.get_y(), self._pw, 90
                     )
                     if rh > 0:
@@ -782,7 +783,7 @@ def main():
     cfg = load_config()
 
     # ── Connection setup ──
-    default_url = cfg.get("url", "http://192.168.0.100:3100")
+    default_url = cfg.get("url", "http://localhost:3100")
     url = input(f"  Homebox URL [{default_url}]: ").strip() or default_url
 
     default_user = cfg.get("username", "")
