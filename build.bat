@@ -4,7 +4,7 @@ echo   Building Homebox Export Tool
 echo ===================================
 echo.
 
-pyinstaller --onefile --windowed --name "HomeboxExport" --collect-data fpdf2 homebox_export_gui.py
+pyinstaller --onefile --windowed --name "HomeboxExport" --collect-data fpdf2 --hidden-import keyring.backends.Windows homebox_export_gui.py
 
 echo.
 if exist "dist\HomeboxExport.exe" (

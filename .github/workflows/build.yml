@@ -27,7 +27,7 @@ jobs:
 
       - name: Build .exe
         run: |
-          pyinstaller --onefile --windowed --name "HomeboxExport" --collect-data fpdf2 homebox_export_gui.py
+          pyinstaller --onefile --windowed --name "HomeboxExport" --collect-data fpdf2 --hidden-import keyring.backends.Windows homebox_export_gui.py
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4

@@ -9,13 +9,16 @@ A standalone Windows application that connects to your [Homebox](https://github.
 
 ## Features
 
+- **API key authentication** — no password prompts; the key is stored in Windows Credential Manager, never on disk
 - **Search & browse** your Homebox inventory from a native Windows GUI
-- **Look up items** by asset ID (single or comma-separated)
+- **Search filters** — location, tags, and asset ID range, combinable with text search
+- **Look up items** by asset ID (single or comma-separated) via the assets API
 - **Export to PDF** — single item or full inventory
 - **Professional insurance-grade layout** with cover page, summary table, and per-item detail pages
 - **Embeds photos and receipt images** directly in the PDF (skips manuals and other documents)
+- **Resilient networking** — request timeouts and automatic retries with backoff
 - **Sortable item table** — click column headers to sort
-- **Portable config** — settings file lives next to the .exe, move it wherever you want
+- **Portable** — single .exe, settings file lives next to it, no installer
 
 ### What's in the PDF?
 
@@ -39,14 +42,20 @@ Download the latest `HomeboxExport.exe` from the [Releases](https://github.com/J
 
 ## Usage
 
-1. Run `HomeboxExport.exe`
-2. Enter your Homebox URL (e.g., `http://192.168.1.50:7745`), username, and password
-3. Click **Connect**
-4. Search for items or click **Load All**
+1. In Homebox, create an API key (user menu, API Keys)
+2. Run `HomeboxExport.exe`
+3. Enter your Homebox URL (e.g., `http://192.168.1.50:7745`) and the API key, then click **Test Connection** or **Connect**
+4. Search for items, use the location/tag/asset-range filters, or click **Load All**
 5. Select items and click **Export Selected to PDF**, or export everything with **Export All to PDF**
 6. Choose where to save and you're done
 
-Your connection settings are saved to `homebox_export_config.json` in the same folder as the .exe. **This file is plain text JSON** and contains your Homebox URL, username, and display name. **Passwords are never saved** — you will be prompted each time you launch the app. If you share or move the .exe, be aware this config file may travel with it.
+On the first successful connect, the API key is saved to **Windows Credential Manager** and the key field is cleared; later launches use the saved key automatically. Non-secret settings (Homebox URL and display name) are saved to `homebox_export_config.json` next to the .exe, so the app stays portable.
+
+There is also a CLI version (`homebox_export.py`) if you prefer terminal-based usage; it shares the same saved key and settings.
+
+## Homebox version compatibility
+
+This tool targets the current Homebox API (`/api/v1/entities`, `/api/v1/assets`). Homebox releases that still use the retired `/api/v1/items` endpoints are not supported by this version — use [v1](https://github.com/JonGaydos/Homebox-Export/releases) for those.
 
 ## Building from Source
 
@@ -62,20 +71,25 @@ pip install -r requirements.txt
 python homebox_export_gui.py
 ```
 
+### Run tests
+
+```bash
+pip install pytest pypdf
+python -m pytest
+```
+
 ### Build the .exe
 
 ```bash
 pip install -r requirements.txt pyinstaller
-pyinstaller --onefile --windowed --name "HomeboxExport" --collect-data fpdf2 homebox_export_gui.py
+pyinstaller --onefile --windowed --name "HomeboxExport" --collect-data fpdf2 --hidden-import keyring.backends.Windows homebox_export_gui.py
 ```
 
 The .exe will be in the `dist/` folder.
 
-There is also a CLI version available (`homebox_export.py`) if you prefer terminal-based usage.
-
 ## Homebox API
 
-This tool uses the Homebox REST API and requires no changes to your Homebox instance. It authenticates with your existing credentials and reads item data, maintenance logs, and attachment images through the standard API endpoints.
+This tool uses the Homebox REST API and requires no changes to your Homebox instance. It authenticates with an API key (sent as a Bearer token) and reads item data, maintenance logs, and attachment images through the standard API endpoints. It never writes to your Homebox data.
 
 ## Inspired by
 
